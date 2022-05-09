@@ -1,6 +1,5 @@
 from django.db import models
-
-# Create your models here.
+from django.contrib.auth.models import User
 
 from django.urls import reverse  # To generate URLS by reversing URL patterns
 
@@ -81,3 +80,7 @@ class Author(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return '{0}'.format(self.name)
+
+class Newuser(User):
+    class Meta:
+        proxy = True
