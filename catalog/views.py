@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 
-from .models import Book, Author, BookInstance, Genre
+from .models import Book, Author, BookInstance
 
 
 def index(request):
@@ -132,8 +132,7 @@ from .models import Author
 
 class AuthorCreate(PermissionRequiredMixin, CreateView):
     model = Author
-    fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death']
-    initial = {'date_of_death': '11/06/2020'}
+    fields = ['name']
     permission_required = 'catalog.can_mark_returned'
 
 
@@ -152,13 +151,13 @@ class AuthorDelete(PermissionRequiredMixin, DeleteView):
 # Classes created for the forms challenge
 class BookCreate(PermissionRequiredMixin, CreateView):
     model = Book
-    fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language']
+    fields = ['title', 'author']
     permission_required = 'catalog.can_mark_returned'
 
 
 class BookUpdate(PermissionRequiredMixin, UpdateView):
     model = Book
-    fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language']
+    fields = ['title', 'author']
     permission_required = 'catalog.can_mark_returned'
 
 

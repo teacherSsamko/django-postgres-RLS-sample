@@ -2,18 +2,13 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Author, Genre, Book, BookInstance, Language
+from .models import Author, Book, BookInstance
 
 """Minimal registration of Models.
 admin.site.register(Book)
 admin.site.register(Author)
 admin.site.register(BookInstance)
-admin.site.register(Genre)
-admin.site.register(Language)
 """
-
-admin.site.register(Genre)
-admin.site.register(Language)
 
 
 class BooksInline(admin.TabularInline):
@@ -30,9 +25,8 @@ class AuthorAdmin(admin.ModelAdmin):
        grouping the date fields horizontally
      - adds inline addition of books in author view (inlines)
     """
-    list_display = ('last_name',
-                    'first_name', 'date_of_birth', 'date_of_death')
-    fields = ['first_name', 'last_name', ('date_of_birth', 'date_of_death')]
+    list_display = ('name',)
+    fields = ['name']
     inlines = [BooksInline]
 
 
@@ -47,7 +41,7 @@ class BookAdmin(admin.ModelAdmin):
      - fields to be displayed in list view (list_display)
      - adds inline addition of book instances in book view (inlines)
     """
-    list_display = ('title', 'author', 'display_genre')
+    list_display = ('title', 'author')
     inlines = [BooksInstanceInline]
 
 
