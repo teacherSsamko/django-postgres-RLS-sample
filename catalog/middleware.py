@@ -7,7 +7,7 @@ class RlsMiddleware(object):
     def __call__(self, request):
         user_id = request.user.id
         with connection.cursor() as cursor:
-            if user_id:
+            if user_id and "accounts" not in request.path:
                 cursor.execute(f'SET ROLE "{user_id}"')
             else:
                 cursor.execute(f'SET ROLE "postgres"')
