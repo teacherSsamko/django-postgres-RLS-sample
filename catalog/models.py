@@ -80,7 +80,3 @@ class Author(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return '{0}'.format(self.name)
-
-class Newuser(User):
-    class Meta:
-        proxy = True
