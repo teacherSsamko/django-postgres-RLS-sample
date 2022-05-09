@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT=5432
+    volumes:
+      - postgresql-library-data:/var/lib/postgresql/data:Z
+    ports:
+      - 5432:5432
+  django:
+    build: ./
+    image: django
+    ports: 
+      - 8000:8000
+    depends_on:
+      - db
+
+volumes:
+  postgresql-library-data: {}
