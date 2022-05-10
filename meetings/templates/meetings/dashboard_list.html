@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Dashboard List</h1>
+
+    {% if dashboard_list %}
+    <ul>
+
+      {% for dashboard in dashboard_list %}
+      <li>
+        {{ dashboard.meeting }} ({{dashboard.contents}})
+      </li>
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}       
+{% endblock %}
+

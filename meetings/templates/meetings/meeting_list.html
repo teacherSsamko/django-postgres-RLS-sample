@@ -1,0 +1,25 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Meeting List</h1>
+
+{% if meeting_list %}
+  <ul>
+
+  {% for meeting in meeting_list %}
+    <li>
+      {{ meeting }} {{meeting.uid}}
+      </a>
+    </li>
+  {% endfor %}
+
+ </ul>
+{% else %}
+  <p>There are no authors available.</p>
+{% endif %}
+        
+        
+        
+{% endblock %}
+

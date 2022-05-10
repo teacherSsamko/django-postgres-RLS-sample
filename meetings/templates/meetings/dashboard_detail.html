@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Title: {{ dashboard.meeting }}</h1>
+
+<p><strong>Contents:</strong> {{ dashboard.contents }}</p>
+
+<div style="margin-left:20px;margin-top:20px">
+<h4>Meetings</h4>
+
+{% for meeting in dashboard.meeting_set.all %}
+<hr>
+<p><strong>uid:</strong> {{meeting.uid}}</p>
+
+{% endfor %}
+</div>
+{% endblock %}
+

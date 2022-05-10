@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from meetings import views as meetings_views
 
 
 urlpatterns = [
@@ -10,6 +11,9 @@ urlpatterns = [
     path('authors/', views.AuthorListView.as_view(), name='authors'),
     path('author/<int:pk>',
          views.AuthorDetailView.as_view(), name='author-detail'),
+    path('m/', meetings_views.MeetingListView.as_view(), name='my-meetings'),
+    path('dashboards/', meetings_views.DashboardListView.as_view(), name='my-dashboards'),
+    path('dashboard/<int:pk>', meetings_views.DashboardDetailView.as_view(), name='dashboard-detail'),
 ]
 
 
