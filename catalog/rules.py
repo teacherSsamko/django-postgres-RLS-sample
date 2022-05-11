@@ -10,9 +10,10 @@ def is_staff(user):
 is_service_owner = rules.is_group_member("Thumb")
 
 @rules.predicate
-def is_team_member(user, team):
-    return rules.is_group_member(team)
-    # return team in user.groups
+def is_team_member(user, dashboard):
+    if dashboard.meeting.team:
+        return dashboard.meeting.team.name in user.groups.values_list('name', flat=True)
+    return False
 
 # team = "AWS"
 # is_team_member = rules.is_group_member(team)
@@ -24,5 +25,5 @@ def is_team_member(user, team):
 
 # Permission
 
-rules.add_perm("meeting.read_dashboard", is_team_member)
-rules.add_perm("meeting.write_dashboard", is_team_member)
+rules.add_perm("meetings.read_dashboard", is_team_member | is_service_owner)
+# rules.add_perm("meetings.create_dashboard", is_team_member)
