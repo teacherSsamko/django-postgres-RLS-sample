@@ -23,11 +23,26 @@ class Meeting(RulesModel):
     # A user can be in multiple teams? or we could get the team from owner
 
 
+class MeetingDetail(RulesModel):
+    # MeetingDetail has one version for the team. 
+    # All team member can access to it
+    # apply RLS using team role
+    meeting = models.OneToOneField(Meeting, on_delete=models.CASCADE)
+    data = models.TextField()
+
+
 class Dashboard(RulesModel):
+    # Dashboard has different version by each team member
+    # each member can see only for one's dashboard on list view
+    # but, all members can access to other's dashboard via shared link
+    # list should be filtered
+    # apply RLS using team role
+
     # class Meta:
     #     rules_permissions = {
     #         "read": rules.has_permission,
     #     }
     meeting = models.ForeignKey(Meeting, models.CASCADE)
     contents = models.TextField(default="Default Dashboard Text")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
