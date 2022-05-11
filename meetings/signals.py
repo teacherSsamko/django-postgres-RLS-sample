@@ -33,21 +33,22 @@ def create_team_role(sender, instance: Group, created, **kwargs):
             # put below for granting some specific privileges
             # 'GRANT select ON TABLE %I TO {role}', t.table_name
             # TODO: for production, apply RLS onto auth_user, auth_group and give all priviliges on those tables
-            GRANT_SELECT_STMT = f"""DO
-$$
-DECLARE
-    t record;
-BEGIN
-    FOR t IN 
-    SELECT table_name
-    FROM information_schema.tables
-    WHERE table_name LIKE 'meetings\_%'
-    LOOP
-        EXECUTE format('GRANT ALL ON ALL TABLES IN SCHEMA public %I TO {role}', t.table_name);
-    END LOOP;
-END;
-$$ LANGUAGE plpgsql;
-"""
+#             GRANT_SELECT_STMT = f"""DO
+# $$
+# DECLARE
+#     t record;
+# BEGIN
+#     FOR t IN 
+#     SELECT table_name
+#     FROM information_schema.tables
+#     WHERE table_name LIKE 'meetings\_%'
+#     LOOP
+#         EXECUTE format('GRANT select ON TABLE %I TO {role}', t.table_name);
+#     END LOOP;
+# END;
+# $$ LANGUAGE plpgsql;
+# """
+            GRANT_SELECT_STMT = f"GRANT ALL ON ALL TABLES IN SCHEMA public TO {role}" # it's only for develop. use above one on production
             db.execute(GRANT_SELECT_STMT)
 
 
