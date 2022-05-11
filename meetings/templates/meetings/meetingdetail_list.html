@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Meeting Detail List</h1>
+
+    {% if meetingdetail_list %}
+    <ul>
+
+      {% for detail in meetingdetail_list %}
+      <li>
+        {{ detail.meeting.team }} {{detail.meeting.team.uid}} ({{detail.data}})</a>
+      </li>
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}       
+{% endblock %}
+

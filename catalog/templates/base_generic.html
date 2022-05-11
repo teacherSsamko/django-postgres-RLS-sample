@@ -41,6 +41,7 @@
   <ul class="sidebar-nav">
     {% if user.is_authenticated %}
       <li><a href="{% url 'my-meetings' %}">My Meetings</a></li>
+      <li><a href="{% url 'my-meeting-details' %}">My Meeting Details</a></li>
       <li><a href="{% url 'my-dashboards' %}">My Dashboards</a></li>
     {% endif %}
   </ul>
