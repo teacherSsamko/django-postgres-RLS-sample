@@ -30,6 +30,9 @@ def create_team_role(sender, instance: Group, created, **kwargs):
             db.execute(f"CREATE ROLE {role}")
             # put below stmt into WHERE clause for selecting multiple app
             # select table_name FROM information_schema.tables WHERE table_name SIMILAR TO 'meetings\_%|catalog\_%';
+            # put below for granting some specific privileges
+            # 'GRANT select ON TABLE %I TO {role}', t.table_name
+            # TODO: for production, apply RLS onto auth_user, auth_group and give all priviliges on those tables
             GRANT_SELECT_STMT = f"""DO
 $$
 DECLARE
@@ -40,7 +43,7 @@ BEGIN
     FROM information_schema.tables
     WHERE table_name LIKE 'meetings\_%'
     LOOP
-        EXECUTE format('GRANT select ON TABLE %I TO {role}', t.table_name);
+        EXECUTE format('GRANT ALL ON ALL TABLES IN SCHEMA public %I TO {role}', t.table_name);
     END LOOP;
 END;
 $$ LANGUAGE plpgsql;
