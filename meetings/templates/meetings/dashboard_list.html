@@ -8,7 +8,7 @@
 
       {% for dashboard in dashboard_list %}
       <li>
-        {{ dashboard.meeting }} ({{dashboard.contents}})
+        <a href="{% url 'dashboard-detail' dashboard.pk %}">{{ dashboard.meeting.team }} {{dashboard.meeting.team.uid}} ({{dashboard.contents}})</a>
       </li>
       {% endfor %}
 
