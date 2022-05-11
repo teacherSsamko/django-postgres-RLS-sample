@@ -54,16 +54,15 @@ def create_db_user(sender, instance: User, created, **kwargs):
     is_staff = instance.is_staff
     user_id = instance.pk
     teams = instance.groups.values_list('name', flat=True)
-    if created:
-        with connection.cursor() as cursor:
+    with connection.cursor() as cursor:
+        if created:
             create_role_stmt = f'CREATE ROLE "{user_id}"'
             create_role_stmt += " WITH SUPERUSER" if is_superuser else ""
             cursor.execute(create_role_stmt)
-    elif is_superuser or is_staff:
-        alter_role_stmt = f'ALTER ROLE "{user_id}" WITH SUPERUSER'
-        with connection.cursor() as cursor:
+        elif is_superuser or is_staff:
+            alter_role_stmt = f'ALTER ROLE "{user_id}" WITH SUPERUSER'
             cursor.execute(alter_role_stmt)
-    # update user's team
-    for team in teams:
-        # is it possible to be in multiple teams?
-        cursor.execute(f'GRANT {team} TO "{user_id}"')
+        # update user's team
+        for team in teams:
+            # is it possible to be in multiple teams?
+            cursor.execute(f'GRANT {team} TO "{user_id}"')
