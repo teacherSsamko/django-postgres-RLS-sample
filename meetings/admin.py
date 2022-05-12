@@ -10,7 +10,7 @@ class MeetingAdmin(admin.ModelAdmin):
 
 @admin.register(SharedUser)
 class SharedUserAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('user', 'meeting')
 
 @admin.register(Dashboard)
 class DashboardAdmin(admin.ModelAdmin):
