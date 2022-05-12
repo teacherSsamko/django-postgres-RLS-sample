@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Meeting, Dashboard, MeetingDetail
+from .models import Meeting, Dashboard, MeetingDetail, SharedUser
 
 
 
@@ -8,7 +8,9 @@ class MeetingAdmin(admin.ModelAdmin):
     list_display = ('uid', 'owner', 'team')
 
 
-
+@admin.register(SharedUser)
+class SharedUserAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(Dashboard)
 class DashboardAdmin(admin.ModelAdmin):
