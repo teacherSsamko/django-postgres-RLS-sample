@@ -9,7 +9,9 @@
 
   {% for meeting in meeting_list %}
     <li>
-      {{ meeting }} {{meeting.uid}}
+      
+      {{ meeting.team }} - {{ meeting.owner}} - 
+      <a href="{% url 'my-meetings-detail' meeting.pk %}">{{meeting.uid}}
       </a>
     </li>
   {% endfor %}

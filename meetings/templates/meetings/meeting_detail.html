@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Uid: {{ meeting.uid }}</h1>
+
+<p><strong>Team:</strong> {{ meeting.team }}</p>
+<p><strong>Owner:</strong> {{ meeting.owner }}</p>
+
+<div style="margin-left:20px;margin-top:20px">
+<h4>Meeting is shared with</h4>
+
+{% for user in meeting.shareduser_set.all %}
+<hr>
+<p><strong>user:</strong> {{ user }}</p>
+
+{% endfor %}
+</div>
+{% endblock %}
+
