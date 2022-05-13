@@ -3,7 +3,7 @@ from django.db import connection, transaction
 from django.dispatch import receiver
 from django.contrib.auth.models import Group, User
 
-from .models import Meeting, Dashboard, MeetingDetail
+from .models import Meeting, Dashboard, MeetingDetail, Role
 
 @receiver(post_save, sender=Meeting)
 def create_post_meeting_objects(sender, instance: Meeting, created, **kwargs):
@@ -22,7 +22,7 @@ def create_post_meeting_objects(sender, instance: Meeting, created, **kwargs):
             )
             detail.save()
 
-@receiver(post_save, sender=Group)
+# @receiver(post_save, sender=Group)
 def create_team_role(sender, instance: Group, created, **kwargs):
     if created:
         with connection.cursor() as db:
@@ -54,19 +54,25 @@ def create_team_role(sender, instance: Group, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def create_db_user(sender, instance: User, created, **kwargs):
-    is_superuser = instance.is_superuser
-    is_staff = instance.is_staff
-    user_id = instance.pk
-    teams = instance.groups.values_list('name', flat=True)
-    with connection.cursor() as cursor:
-        if created:
-            create_role_stmt = f'CREATE ROLE "{user_id}"'
-            create_role_stmt += " WITH SUPERUSER" if is_superuser else ""
-            cursor.execute(create_role_stmt)
-        elif is_superuser or is_staff:
-            alter_role_stmt = f'ALTER ROLE "{user_id}" WITH SUPERUSER'
-            cursor.execute(alter_role_stmt)
-        # update user's team
-        for team in teams:
-            # is it possible to be in multiple teams?
-            cursor.execute(f'GRANT {team} TO "{user_id}"')
+    ### Create Role For RLS. not necessary for using Rules only ###
+    # is_superuser = instance.is_superuser
+    # is_staff = instance.is_staff
+    # user_id = instance.pk
+    # teams = instance.groups.values_list('name', flat=True)
+    # with connection.cursor() as cursor:
+    #     if created:
+    #         create_role_stmt = f'CREATE ROLE "{user_id}"'
+    #         create_role_stmt += " WITH SUPERUSER" if is_superuser else ""
+    #         cursor.execute(create_role_stmt)
+    #     elif is_superuser or is_staff:
+    #         alter_role_stmt = f'ALTER ROLE "{user_id}" WITH SUPERUSER'
+    #         cursor.execute(alter_role_stmt)
+    #     # update user's team
+    #     for team in teams:
+    #         # is it possible to be in multiple teams?
+    #         cursor.execute(f'GRANT {team} TO "{user_id}"')
+
+    # create Role for new user
+    if created:
+        role = Role(user=instance)
+        role.save()
