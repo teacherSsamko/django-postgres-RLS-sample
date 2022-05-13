@@ -1,6 +1,10 @@
 from django.contrib import admin
-from .models import Meeting, Dashboard, MeetingDetail, SharedUser
+from .models import Meeting, Dashboard, MeetingDetail, SharedUser, Role
 
+
+@admin.register(Role)
+class RoleAdmin(admin.ModelAdmin):
+    list_display = ('user', 'user_role')
 
 
 @admin.register(Meeting)

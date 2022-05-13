@@ -8,6 +8,16 @@ from django.contrib.auth.models import User, Group
 from rules.contrib.models import RulesModel
 
 
+class Role(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    team = models.ForeignKey(Group, on_delete=models.CASCADE)
+    class Roles(models.IntegerChoices):
+        ADMIN = 1, "Admin"
+        MEMBER = 2, "Member"
+        
+    user_role = models.PositiveSmallIntegerField(choices=Roles.choices, default=Roles.MEMBER)
+
+
 class Meeting(RulesModel):
     uid = models.CharField(
         unique=True, default=urlsafe_b64encode(
