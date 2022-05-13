@@ -9,8 +9,6 @@ from .models import Meeting
 def is_staff(user):
     return user.is_superuser or user.is_staff
 
-is_service_owner = rules.is_group_member("Thumb")
-
 @rules.predicate
 def is_team_member(user, team):
     return rules.is_group_member(team)
@@ -45,5 +43,5 @@ rules.add_perm("meetings.read_meeting_detail", rules.is_authenticated and has_vi
 
 rules.add_perm("meetings.read_dashboard", is_team_member)
 rules.add_perm("meetings.write_dashboard", is_team_member)
-rules.add_perm("meetings.read_dashboard_detail", is_team_member | is_service_owner)
+rules.add_perm("meetings.read_dashboard_detail", is_team_member)
 rules.add_perm("meetings.read_dashboard_list", is_team_member)
