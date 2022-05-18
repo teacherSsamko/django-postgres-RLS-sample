@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Meeting, Dashboard, MeetingDetail, SharedUser, Role
+from .models import Meeting, Dashboard, MeetingDetail, SharedUser, Role, SharedLink
 
 
 @admin.register(Role)
@@ -9,7 +9,7 @@ class RoleAdmin(admin.ModelAdmin):
 
 @admin.register(Meeting)
 class MeetingAdmin(admin.ModelAdmin):
-    list_display = ('uid', 'owner', 'team')
+    list_display = ('uid', 'owner')
 
 
 @admin.register(SharedUser)
@@ -32,3 +32,8 @@ class MeetingDetailAdmin(admin.ModelAdmin):
     @admin.display(empty_value="??")
     def view_meeting_team(self, obj):
         return obj.meeting.team
+
+
+@admin.register(SharedLink)
+class SharedLinkAdmin(admin.ModelAdmin):
+    list_display = ('uid', 'target')
