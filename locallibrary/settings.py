@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'catalog.middleware.RlsMiddleware',
+    'meetings.middleware.SharingAsMiddleware',
 ]
 
 ROOT_URLCONF = 'locallibrary.urls'

@@ -74,5 +74,5 @@ def create_db_user(sender, instance: User, created, **kwargs):
 
     # create Role for new user
     if created:
-        role = Role(user=instance)
+        role = Role(user=instance, group=Group.objects.get(name="guest"))
         role.save()

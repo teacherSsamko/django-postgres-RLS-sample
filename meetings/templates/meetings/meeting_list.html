@@ -11,7 +11,7 @@
     <li>
       
       {{ meeting.team }} - {{ meeting.owner}} - 
-      <a href="{% url 'my-meetings-detail' meeting.pk %}">{{meeting.uid}}
+      <a href="{% url 'meeting-detail' meeting.pk %}">{{meeting.uid}}
       </a>
     </li>
   {% endfor %}

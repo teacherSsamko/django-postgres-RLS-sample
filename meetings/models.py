@@ -1,11 +1,14 @@
 import os
+from datetime import date, datetime, timedelta
 from math import ceil
 from base64 import urlsafe_b64encode
 
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, F
+from django.db.models.functions import Now
 from django.contrib.auth.models import User, Group
 
+import rules
 from rules.contrib.models import RulesModel
 
 
@@ -27,6 +30,11 @@ class Role(models.Model):
 
 
 class Meeting(RulesModel):
+    # class Meta:
+    #     rules_permissions = {
+    #         "read": rules.has_view_permission,
+    #         "update": rules.has_write_permission,
+    #     }
     uid = models.CharField(
         unique=True, default=urlsafe_b64encode(
         os.urandom(ceil(12 * 6 / 8))).rstrip(b'=').decode('ascii'), max_length=40, db_index=True)
@@ -58,6 +66,9 @@ class Dashboard(RulesModel):
 
 
 class MeetingInvitee(models.Model):
+    """
+        Access table should place on the same file with target model and have name of '{target_model}Access'
+    """
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)
     shared_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     shared_group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
@@ -80,16 +91,44 @@ class SharedLink(models.Model):
         unique=True, default=urlsafe_b64encode(
         os.urandom(ceil(12 * 6 / 8))).rstrip(b'=').decode('ascii'), max_length=40, db_index=True)
     target = models.CharField(max_length=512)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class SharedWith(models.IntegerChoices):
         RESTRICTED = 1, 'Restricted' # Invitees only
         TEAM = 2, 'Team' # Share with one's team
-        ANYOWN = 3, 'Anyone'
+        ANYONE = 3, 'Anyone'
 
     shared_with = models.PositiveSmallIntegerField(choices=SharedWith.choices, default=SharedWith.RESTRICTED)
     role = models.PositiveSmallIntegerField(choices=ShareRole.choices, default=ShareRole.VIEWER)
+    created_at = models.DateTimeField(auto_created=True)
+    expired_at = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                name="valid_expiration",
+                check=(
+                    Q(expired_at__gt=F("created_at")) &
+                    Q(expired_at__gt=Now())
+                )
+            )
+        ]
 
     @property
     def url(self):
+        # TODO: add right prefix
         return self.uid
+
+    def check_available(self):
+        return self.is_active and (Now() < self.expired_at)
+
+    def set_expired_dt(self, delta: timedelta = None, dt: datetime = None):
+        if not delta and not dt:
+            delta = timedelta(days=7)
+            self.expired_at = self.created_at + delta
+            self.save()
+
+    def extend_expiration(self, delta: timedelta = None):
+        if not delta:
+            delta = timedelta(days=7)

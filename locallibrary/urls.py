@@ -19,7 +19,7 @@ from django.contrib import admin
 # Use include() to add URLS from the catalog application and authentication system
 from django.urls import include
 
-from meetings.views import proxy_link, SharedLinkView
+from meetings.views import SharedLinkView
 
 
 urlpatterns = [
